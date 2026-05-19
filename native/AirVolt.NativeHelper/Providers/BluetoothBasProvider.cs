@@ -418,19 +418,6 @@ public class BluetoothBasProvider : IDeviceBatteryProvider
         }
     }
 
-    private async Task<int?> ReadBatteryLevelFromDeviceWithTimeout(BluetoothLEDevice bleDevice)
-    {
-        using var cts = new CancellationTokenSource(GattTimeoutMs);
-        try
-        {
-            var task = ReadBatteryLevelFromDevice(bleDevice);
-            var completed = await Task.WhenAny(task, Task.Delay(GattTimeoutMs, cts.Token));
-            if (completed == task) { cts.Cancel(); return await task; }
-            return null;
-        }
-        catch (OperationCanceledException) { return null; }
-    }
-
     private static async Task<int?> ReadBatteryLevelFromDevice(BluetoothLEDevice bleDevice)
     {
         // Try cached BAS first (fast, works for Xbox controllers, keyboards, etc.)
@@ -614,103 +601,6 @@ public class BluetoothBasProvider : IDeviceBatteryProvider
         catch (Exception ex)
         {
             Console.Error.WriteLine($"[bluetooth-bas] BLE name search error: {ex.Message}");
-        }
-        return null;
-    }
-
-    private static async Task<int?> TryDiscoverBatteryLevel(
-        BluetoothLEDevice bleDevice, BluetoothCacheMode cacheMode, CancellationToken ct = default)
-    {
-        try
-        {
-            Console.Error.WriteLine($"[bluetooth-bas] discovering battery-like characteristics ({cacheMode})...");
-            if (ct.IsCancellationRequested) return null;
-
-            var gattResult = await bleDevice.GetGattServicesAsync(cacheMode);
-            if (gattResult.Status != GattCommunicationStatus.Success)
-            {
-                Console.Error.WriteLine(
-                    $"[bluetooth-bas] GetGattServicesAsync ({cacheMode}) returned {gattResult.Status}");
-                return null;
-            }
-            if (ct.IsCancellationRequested) return null;
-
-            var orderedServices = gattResult.Services
-                .Where(s => !NonBatteryServiceUuids.Contains(s.Uuid))
-                .OrderByDescending(s => IsCustomUuid(s.Uuid))
-                .ThenBy(s => s.Uuid.ToString("D"))
-                .ToList();
-
-            foreach (var service in orderedServices)
-            {
-                if (ct.IsCancellationRequested) return null;
-                try
-                {
-                    var charResult = await service.GetCharacteristicsAsync(cacheMode);
-                    if (charResult.Status != GattCommunicationStatus.Success) continue;
-
-                    foreach (var characteristic in charResult.Characteristics)
-                    {
-                        if (ct.IsCancellationRequested) return null;
-                        try
-                        {
-                            if ((characteristic.CharacteristicProperties & GattCharacteristicProperties.Read) == 0)
-                                continue;
-
-                            var readResult = await characteristic.ReadValueAsync(cacheMode);
-                            if (readResult.Status != GattCommunicationStatus.Success) continue;
-
-                            var data = readResult.Value;
-                            if (data == null || data.Length == 0) continue;
-
-                            var reader = DataReader.FromBuffer(data);
-                            var bytes = new byte[reader.UnconsumedBufferLength];
-                            reader.ReadBytes(bytes);
-
-                            var level = ParseBatteryBytes(bytes);
-                            if (level.HasValue)
-                            {
-                                Console.Error.WriteLine(
-                                    $"[bluetooth-bas] discovered battery: " +
-                                    $"service={service.Uuid:D} char={characteristic.Uuid:D} level={level.Value}%");
-                                return level;
-                            }
-
-                            if (bytes.Length <= 4 && bytes.Length > 0)
-                            {
-                                var hex = string.Join(" ", bytes.Select(b => b.ToString("X2")));
-                                Console.Error.WriteLine(
-                                    $"[bluetooth-bas] characteristic " +
-                                    $"service={service.Uuid:D} char={characteristic.Uuid:D} " +
-                                    $"len={bytes.Length} data=[{hex}]");
-                            }
-                        }
-                        catch (Exception ex) when (ex is not OperationCanceledException)
-                        {
-                            Console.Error.WriteLine(
-                                $"[bluetooth-bas] read char {characteristic.Uuid:D} error: {ex.GetType().Name}");
-                        }
-                    }
-                }
-                catch (Exception ex) when (ex is not OperationCanceledException)
-                {
-                    Console.Error.WriteLine(
-                        $"[bluetooth-bas] enum service {service.Uuid:D} error: {ex.GetType().Name}");
-                }
-            }
-        }
-        catch (OperationCanceledException)
-        {
-            Console.Error.WriteLine($"[bluetooth-bas] discovery cancelled ({cacheMode})");
-        }
-        catch (ObjectDisposedException)
-        {
-            Console.Error.WriteLine($"[bluetooth-bas] discovery aborted — device disposed ({cacheMode})");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine(
-                $"[bluetooth-bas] discover {cacheMode} error: {ex.GetType().Name}: {ex.Message}");
         }
         return null;
     }

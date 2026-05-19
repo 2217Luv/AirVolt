@@ -4,13 +4,11 @@ using AirVolt.NativeHelper.Providers;
 var dispatcher = new MessageDispatcher();
 
 // Register providers in priority order (lower = higher priority)
-// 1. Windows PnP battery property — authoritative for all devices (uses Windows' own battery data)
+// 1. Windows PnP battery property — authoritative (uses system battery data)
 dispatcher.AddProvider(new WindowsBatteryPropertyProvider());
 // 2. BLE GATT Battery Service — fallback for BLE devices
 dispatcher.AddProvider(new BluetoothBasProvider());
-// 3. Windows device properties — fallback
-dispatcher.AddProvider(new WindowsDevicePropertyProvider());
-// 4. Mock data — development fallback
+// 3. Mock data — development fallback (skipped when real devices found)
 dispatcher.AddProvider(new MockDeviceProvider());
 
 Console.Error.WriteLine("[helper] AirVolt NativeHelper v0.1.0 ready");
