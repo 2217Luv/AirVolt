@@ -1,0 +1,47 @@
+[helper] AirVolt NativeHelper v0.1.0 ready
+[helper] received method=devices.scan id=1
+[windows-pnp-property] device list size result=0, charCount=13146
+[windows-pnp-property] #1: 'Xbox Wireless Controller' → 100% [BTHLE\Dev_ac8ebd516cee\8&8070ab4&1&ac8ebd516cee]
+[windows-pnp-property] #2: 'INFI75 5.3' → 40% [BTHLE\Dev_d417aa3466ea\8&8070ab4&1&d417aa3466ea]
+[windows-pnp-property] #3: 'vivo TWS 4 Hands-Free AG' → 60% [BTHENUM\{0000111e-0000-1000-8000-00805f9b34fb}_LOCALMFG&0002\8&3603d69&1&68628AA73824_C00000000]
+[windows-pnp-property] BT devices checked=15, battery found=3
+[windows-pnp-property] total results: 3
+[bluetooth-bas] querying BLE devices...
+[bluetooth-bas] found 2 BLE devices
+[bluetooth-bas] BLE device: INFI75 5.3
+[bluetooth-bas] INFI75 5.3 battery=40%
+[bluetooth-bas] BLE device: Xbox Wireless Controller
+[bluetooth-bas] Xbox Wireless Controller battery=100%
+[bluetooth-bas] querying BLE devices...
+[bluetooth-bas] found 0 BLE devices
+[bluetooth-bas] querying classic BT devices with selector...
+[bluetooth-bas] found 1 classic BT devices
+[bluetooth-bas] classic device: vivo TWS 4
+[bluetooth-bas] vivo TWS 4 — looking up BLE by address (0x68628AA73824)...
+[bluetooth-bas] no Battery Service on device. Available services: 00001801-0000-1000-8000-00805f9b34fb, 00001800-0000-1000-8000-00805f9b34fb, 00001100-d102-11e1-9b23-00025b00a5a5, 00000837-0000-1000-8000-00805f9b34fb, 0000fe2c-0000-1000-8000-00805f9b34fb, 0000eb10-d102-11e1-9b23-00025b00a5a5, 0000fd92-0000-1000-8000-00805f9b34fb, 0000184d-0000-1000-8000-00805f9b34fb, 00001850-0000-1000-8000-00805f9b34fb, 00001844-0000-1000-8000-00805f9b34fb, 00001855-0000-1000-8000-00805f9b34fb, 00001853-0000-1000-8000-00805f9b34fb, 0000184f-0000-1000-8000-00805f9b34fb, 0000184e-0000-1000-8000-00805f9b34fb, 2587db3c-ce70-4fc9-935f-777ab4188fd7, 12994b7e-6d47-4215-8c9e-aae9a1095ba3
+[bluetooth-bas] battery candidate: service=00001855-0000-1000-8000-00805f9b34fb char=00002b51-0000-1000-8000-00805f9b34fb level=42%
+[bluetooth-bas] char 00001855-0000-1000-8000-00805f9b34fb/00002b51-0000-1000-8000-00805f9b34fb data[2]: 2A 00
+[bluetooth-bas] selected best candidate: service=00001855-0000-1000-8000-00805f9b34fb char=00002b51-0000-1000-8000-00805f9b34fb level=42% (from 1 candidates)
+[bluetooth-bas] vivo TWS 4 battery=42% (via classic→BLE)
+[bluetooth-bas] querying classic BT devices with selector...
+[bluetooth-bas] found 1 classic BT devices
+[bluetooth-bas] classic device: vivo TWS 4
+[bluetooth-bas] vivo TWS 4 — already seen via BLE scan, skipping (MAC match)
+[dispatcher] skipping duplicate name 'INFI75 5.3' from bluetooth-bas
+[dispatcher] skipping duplicate name 'Xbox Wireless Controller' from bluetooth-bas
+[dispatcher] skipping duplicate name 'vivo TWS 4' from bluetooth-bas
+[windows-device-property] querying paired BT devices...
+[windows-device-property] found 1 paired BT devices
+[windows-device-property] device: vivo TWS 4 kind=Headset connection=BluetoothLE connected=True
+[windows-device-property] FromIdAsync failed for vivo TWS 4: 参数错误。
+
+提供的设备 ID 不是有效的 BluetoothLEDevice 对象。
+[windows-device-property] no Battery Service. Available: 00001801-0000-1000-8000-00805f9b34fb, 00001800-0000-1000-8000-00805f9b34fb, 00001100-d102-11e1-9b23-00025b00a5a5, 00000837-0000-1000-8000-00805f9b34fb, 0000fe2c-0000-1000-8000-00805f9b34fb, 0000eb10-d102-11e1-9b23-00025b00a5a5, 0000fd92-0000-1000-8000-00805f9b34fb, 0000184d-0000-1000-8000-00805f9b34fb, 00001850-0000-1000-8000-00805f9b34fb, 00001844-0000-1000-8000-00805f9b34fb, 00001855-0000-1000-8000-00805f9b34fb, 00001853-0000-1000-8000-00805f9b34fb, 0000184f-0000-1000-8000-00805f9b34fb, 0000184e-0000-1000-8000-00805f9b34fb, 2587db3c-ce70-4fc9-935f-777ab4188fd7, 12994b7e-6d47-4215-8c9e-aae9a1095ba3
+[windows-device-property] no Battery Service. Available: 00001801-0000-1000-8000-00805f9b34fb, 00001800-0000-1000-8000-00805f9b34fb, 00001100-d102-11e1-9b23-00025b00a5a5, 00000837-0000-1000-8000-00805f9b34fb, 0000fe2c-0000-1000-8000-00805f9b34fb, 0000eb10-d102-11e1-9b23-00025b00a5a5, 0000fd92-0000-1000-8000-00805f9b34fb, 0000184d-0000-1000-8000-00805f9b34fb, 00001850-0000-1000-8000-00805f9b34fb, 00001844-0000-1000-8000-00805f9b34fb, 00001855-0000-1000-8000-00805f9b34fb, 00001853-0000-1000-8000-00805f9b34fb, 0000184f-0000-1000-8000-00805f9b34fb, 0000184e-0000-1000-8000-00805f9b34fb, 2587db3c-ce70-4fc9-935f-777ab4188fd7, 12994b7e-6d47-4215-8c9e-aae9a1095ba3
+[windows-device-property] discovering battery-like characteristics (Cached)...
+[windows-device-property] discovering battery-like characteristics (Uncached)...
+[windows-device-property] vivo TWS 4 — no battery level (no standard BAS or GATT timeout)
+[windows-device-property] querying connected BT devices...
+[windows-device-property] found 1 connected BT devices
+[dispatcher] skipping mock provider — real devices found
+[helper] sending response id=1 ok=True len=1176
