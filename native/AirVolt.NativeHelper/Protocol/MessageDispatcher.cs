@@ -78,6 +78,16 @@ public class MessageDispatcher
                     continue;
                 }
 
+                // If all devices already have battery data, skip remaining non-mock providers
+                bool allHaveBattery = hasRealDevices &&
+                    allDevices.Count > 0 &&
+                    allDevices.All(d => d.Battery.Status == Models.BatteryStatus.Available);
+                if (allHaveBattery && provider.Name != "mock")
+                {
+                    Console.Error.WriteLine($"[dispatcher] all {allDevices.Count} devices have battery — skipping {provider.Name}");
+                    continue;
+                }
+
                 try
                 {
                     var devices = await provider.ScanAsync();

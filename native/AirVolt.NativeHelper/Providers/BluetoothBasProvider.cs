@@ -17,8 +17,8 @@ public class BluetoothBasProvider : IDeviceBatteryProvider
     private static readonly Guid BatteryServiceUuid = Guid.Parse("0000180f-0000-1000-8000-00805f9b34fb");
     private static readonly Guid BatteryLevelUuid = Guid.Parse("00002a19-0000-1000-8000-00805f9b34fb");
 
-    private const int GattTimeoutMs = 3000;
-    private const int GattDiscoveryTimeoutMs = 5000;
+    private const int GattTimeoutMs = 1500;
+    private const int GattDiscoveryTimeoutMs = 2500;
 
     // Standard GATT services that are NOT battery services
     private static readonly HashSet<Guid> NonBatteryServiceUuids = new()
@@ -662,7 +662,7 @@ public class BluetoothBasProvider : IDeviceBatteryProvider
             var notificationTcs = new TaskCompletionSource<byte[]?>();
             var subscriptions = new List<(GattCharacteristic Char, TypedEventHandler<GattCharacteristic, GattValueChangedEventArgs> Handler)>();
 
-            using var timeoutCts = new CancellationTokenSource(4000);
+            using var timeoutCts = new CancellationTokenSource(2000);
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
             using var reg = linkedCts.Token.Register(() => notificationTcs.TrySetResult(null));
 
