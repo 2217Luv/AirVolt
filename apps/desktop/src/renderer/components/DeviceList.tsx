@@ -11,8 +11,8 @@ export default function DeviceList({ devices }: Props) {
       <div className="device-list">
         <div className="empty-state">
           <span className="empty-icon">🔋</span>
-          <p>No devices found</p>
-          <p style={{ fontSize: 11, marginTop: 4 }}>Click refresh to scan</p>
+          <p>未发现设备</p>
+          <p style={{ fontSize: 11, marginTop: 4 }}>点击刷新按钮开始扫描</p>
         </div>
       </div>
     )

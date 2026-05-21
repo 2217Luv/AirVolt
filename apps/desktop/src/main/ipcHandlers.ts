@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron'
 import { getSettings, saveSettings } from './settingsStore'
+import { openSettingsWindow } from './tray'
 import type { DeviceBatterySnapshot, AppSettings } from '../renderer/types'
 
 let cachedDevices: DeviceBatterySnapshot[] = []
@@ -35,7 +36,6 @@ export function registerIpcHandlers(): void {
   ipcMain.handle('getHelperStatus', () => helperStatus)
 
   ipcMain.on('openSettingsWindow', () => {
-    const { openSettingsWindow } = require('./tray')
     openSettingsWindow()
   })
 

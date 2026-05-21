@@ -22,7 +22,7 @@ interface PendingRequest {
   timer: NodeJS.Timeout
 }
 
-const REQUEST_TIMEOUT = 30000
+const REQUEST_TIMEOUT = 10000
 const RESTART_DELAY = 3000
 const MAX_RESTART_ATTEMPTS = 3
 
@@ -34,7 +34,6 @@ export class HelperBridge {
   private buffer = ''
   private listeners = new Map<string, Array<(payload: unknown) => void>>()
   private onStatusChange?: (connected: boolean) => void
-  private ongoingScan: Promise<DeviceBatterySnapshot[]> | null = null
 
   constructor(private helperProjectPath: string) {}
 
@@ -159,24 +158,10 @@ export class HelperBridge {
   }
 
   async scanDevices(): Promise<DeviceBatterySnapshot[]> {
-    // Coalesce concurrent scan requests to avoid flooding the helper with many
-    // parallel devices.scan calls which can cause timeouts and out-of-order
-    // responses. If a scan is already in progress, return the same promise.
-    if (this.ongoingScan) return this.ongoingScan
-
-    this.ongoingScan = (async () => {
-      try {
-        const res = await this.send('devices.scan', { includeUnsupported: true })
-        if (!res.ok) throw new Error(res.error?.message ?? 'Scan failed')
-        const result = res.result as { devices: DeviceBatterySnapshot[] }
-        return result.devices
-      } finally {
-        // clear ongoingScan so subsequent scans can be started
-        this.ongoingScan = null
-      }
-    })()
-
-    return this.ongoingScan
+    const res = await this.send('devices.scan', { includeUnsupported: true })
+    if (!res.ok) throw new Error(res.error?.message ?? 'Scan failed')
+    const result = res.result as { devices: DeviceBatterySnapshot[] }
+    return result.devices
   }
 
   async healthCheck(): Promise<{ version: string }> {

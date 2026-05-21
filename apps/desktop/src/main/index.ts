@@ -72,8 +72,8 @@ function checkLowBattery(devices: DeviceBatterySnapshot[], threshold: number): v
       if (!notifiedDevices.has(notifyKey)) {
         notifiedDevices.add(notifyKey)
         new Notification({
-          title: 'AirVolt - Low Battery',
-          body: `${device.name} battery is at ${device.battery.percentage}%`,
+          title: 'AirVolt - 低电量提醒',
+          body: `${device.name} 电量仅剩 ${device.battery.percentage}%`,
           icon: join(__dirname, '../../resources/icon.png')
         }).show()
       }

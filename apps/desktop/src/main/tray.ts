@@ -31,14 +31,14 @@ function createTrayIcon(): nativeImage {
 export function createTray(getDevicesCb: () => unknown): Tray {
   const icon = createTrayIcon()
   tray = new Tray(icon)
-  tray.setToolTip('AirVolt')
+  tray.setToolTip('AirVolt - 蓝牙设备电量')
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Show Devices', click: () => togglePopup(getDevicesCb) },
+    { label: '显示设备', click: () => togglePopup(getDevicesCb) },
     { type: 'separator' },
-    { label: 'Settings', click: () => openSettingsWindow() },
+    { label: '设置', click: () => openSettingsWindow() },
     { type: 'separator' },
-    { label: 'Quit', click: () => { closePopup(); require('electron').app.quit() } }
+    { label: '退出', click: () => { closePopup(); require('electron').app.quit() } }
   ])
 
   tray.setContextMenu(contextMenu)
@@ -125,7 +125,7 @@ function openSettingsWindow(): void {
     width: 420,
     height: 520,
     resizable: false,
-    title: 'AirVolt Settings',
+    title: 'AirVolt 设置',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false

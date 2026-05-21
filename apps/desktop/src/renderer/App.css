@@ -47,6 +47,7 @@ body {
   background: transparent;
   color: #a6adc8;
   font-size: 16px;
+  line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;

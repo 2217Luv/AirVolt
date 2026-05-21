@@ -11,12 +11,12 @@ export default function SettingsPanel({ settings, onSave, onBack }: Props) {
     <div className="settings-panel">
       <div className="settings-header">
         <button className="back-btn" onClick={onBack}>←</button>
-        <h2>Settings</h2>
+        <h2>设置</h2>
       </div>
       <div className="settings-content">
         <div className="setting-group">
           <div className="toggle-row">
-            <span>Start with Windows</span>
+            <span>开机自启</span>
             <label className="toggle">
               <input
                 type="checkbox"
@@ -29,20 +29,20 @@ export default function SettingsPanel({ settings, onSave, onBack }: Props) {
         </div>
 
         <div className="setting-group">
-          <label>Refresh Interval</label>
+          <label>刷新间隔</label>
           <select
             value={settings.refreshInterval}
             onChange={(e) => onSave({ refreshInterval: Number(e.target.value) })}
           >
-            <option value={1}>Every 1 minute</option>
-            <option value={5}>Every 5 minutes</option>
-            <option value={15}>Every 15 minutes</option>
-            <option value={30}>Every 30 minutes</option>
+            <option value={1}>每 1 分钟</option>
+            <option value={5}>每 5 分钟</option>
+            <option value={15}>每 15 分钟</option>
+            <option value={30}>每 30 分钟</option>
           </select>
         </div>
 
         <div className="setting-group">
-          <label>Low Battery Threshold</label>
+          <label>低电量阈值</label>
           <select
             value={settings.lowBatteryThreshold}
             onChange={(e) => onSave({ lowBatteryThreshold: Number(e.target.value) })}
@@ -56,7 +56,7 @@ export default function SettingsPanel({ settings, onSave, onBack }: Props) {
 
         <div className="setting-group">
           <div className="toggle-row">
-            <span>Show unsupported devices</span>
+            <span>显示不支持的设备</span>
             <label className="toggle">
               <input
                 type="checkbox"
@@ -70,7 +70,7 @@ export default function SettingsPanel({ settings, onSave, onBack }: Props) {
 
         <div className="setting-group">
           <div className="toggle-row">
-            <span>Low battery notifications</span>
+            <span>低电量通知</span>
             <label className="toggle">
               <input
                 type="checkbox"

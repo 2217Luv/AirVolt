@@ -82,20 +82,20 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="app-title">AirVolt</h1>
+        <h1 className="app-title">设备电量</h1>
         <div className="header-actions">
           <button
             className="icon-btn"
             onClick={handleRefresh}
             disabled={refreshing}
-            title="Refresh"
+            title="刷新"
           >
             {refreshing ? '⟳' : '↻'}
           </button>
           <button
             className="icon-btn"
-            onClick={() => window.airvolt.openSettingsWindow()}
-            title="Settings"
+            onClick={() => setView('settings')}
+            title="设置"
           >
             ⚙
           </button>
@@ -103,7 +103,7 @@ export default function App() {
       </header>
       <DeviceList devices={devices} />
       <footer className="app-footer">
-        <span>{devices.length} device{devices.length !== 1 ? 's' : ''}</span>
+        <span>{devices.length} 台设备</span>
       </footer>
     </div>
   )
