@@ -3,6 +3,7 @@ import { join } from 'path'
 
 let tray: Tray | null = null
 let popupWindow: BrowserWindow | null = null
+let mainWindow: BrowserWindow | null = null
 
 function createTrayIcon(): nativeImage {
   const size = 16
@@ -34,11 +35,11 @@ export function createTray(getDevicesCb: () => unknown): Tray {
   tray.setToolTip('AirVolt - 蓝牙设备电量')
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: '显示设备', click: () => togglePopup(getDevicesCb) },
+    { label: '显示设备', click: () => openMainWindow(getDevicesCb) },
     { type: 'separator' },
     { label: '设置', click: () => openSettingsWindow() },
     { type: 'separator' },
-    { label: '退出', click: () => { closePopup(); require('electron').app.quit() } }
+    { label: '退出', click: () => { closePopup(); closeMainWindow(); require('electron').app.quit() } }
   ])
 
   tray.setContextMenu(contextMenu)
@@ -49,7 +50,7 @@ export function createTray(getDevicesCb: () => unknown): Tray {
     if (clickTimer) {
       clearTimeout(clickTimer)
       clickTimer = null
-      openSettingsWindow()
+      openMainWindow(getDevicesCb)
     } else {
       clickTimer = setTimeout(() => {
         clickTimer = null
@@ -126,6 +127,50 @@ function togglePopup(getDevicesCb: () => unknown): void {
   })
 }
 
+function openMainWindow(getDevicesCb: () => unknown): void {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.focus()
+    return
+  }
+
+  closePopup()
+
+  mainWindow = new BrowserWindow({
+    width: 360,
+    height: 520,
+    resizable: false,
+    title: 'AirVolt - 设备电量',
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false
+    }
+  })
+
+  mainWindow.setMenuBarVisibility(false)
+
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
+
+  if (import.meta.env.DEV) {
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']!)
+  } else {
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+  }
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow!.show()
+    getDevicesCb()
+  })
+}
+
+function closeMainWindow(): void {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.close()
+    mainWindow = null
+  }
+}
+
 function closePopup(): void {
   if (popupWindow && !popupWindow.isDestroyed()) {
     popupWindow.close()
@@ -155,4 +200,4 @@ function openSettingsWindow(): void {
   }
 }
 
-export { closePopup, openSettingsWindow }
+export { closePopup, closeMainWindow, openSettingsWindow }
