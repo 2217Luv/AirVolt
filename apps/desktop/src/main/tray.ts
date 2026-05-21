@@ -42,7 +42,21 @@ export function createTray(getDevicesCb: () => unknown): Tray {
   ])
 
   tray.setContextMenu(contextMenu)
-  tray.on('click', () => togglePopup(getDevicesCb))
+
+  let clickTimer: ReturnType<typeof setTimeout> | null = null
+
+  tray.on('click', () => {
+    if (clickTimer) {
+      clearTimeout(clickTimer)
+      clickTimer = null
+      openSettingsWindow()
+    } else {
+      clickTimer = setTimeout(() => {
+        clickTimer = null
+        togglePopup(getDevicesCb)
+      }, 250)
+    }
+  })
 
   return tray
 }
